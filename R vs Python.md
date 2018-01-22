@@ -11,17 +11,21 @@ y = matrix[,1] # R start with 1
 y = matrtix[:,0] #python start with 0
 
 cbind, rbind
-np.vstack  np.hstack
+np.vstack  np.hstack  np.append(x,y, axis=1)
 
-a$fieldname
+columnname(x) <- c("columnname1","columnname2")
+rowname(x)<- c("row1","row2")
 
+dt = np.dtype({'names':['1st','2nd','3rd'],'formats':['f8','f8','f8']})
+x = np.array(obj, dt)
 ````
 # Importing a CSV
 ````
-nba <- read.csv("nba_2013.csv")
+nba <- read.csv("nba_2013.csv",header=True)
+nba <- read.table("nba_2013.csv",header=FALSE, sep=",")
 
 import pandas
-nba = pandas.read_csv("nba_2013.csv")
+nba = pandas.read_csv("nba_2013.csv",header=1)
 ````
 # Finding the number of rows
 ````
@@ -45,10 +49,14 @@ test <- nba[-trainIndex,]
 
 train = nba.sample(frac=0.8, random_state=1)
 test = nba.loc[~nba.index.isin(train.index)]
+or
+trainin = pima[0::2,:8]   #get each other row with the frist eight columns
+test = pima[1::4,:8]
+vaild= pima[3::4,:8]
 ````
 # the average of each statistic
 ````
-sapply(nba, mean, na.rm=TRUE) 
+sapply(nba, mean, na.rm=TRUE)  # na.rm=TRUE means ignore NA
 apply(nba, 1, mean) # 1= row 2=column
 # extract data, renturn a list
 # 3rd param= num of row, 4th param=num of column
@@ -56,18 +64,18 @@ lapply(MyList,"[", 1, )
 #wrapper function of lapply()
 sapply(MyList,"[", 2, 1 )
 
-nba.mean()
+nba.mean() # already ignore NA
 map(function,list) or 
 map(lambda x: x[1]*2 + 3, [[1,2,3], [1,4]])
 np.fromfunction(lambda i, j: i == j, (3, 3), dtype=int) #Construct an array by executing a function over each coordinate.  #lambda is anonymous function in python
 ````
 # scatterplots
 ````
-library(GGally)
+library(GGally)  # ggplot
 ggpairs(nba[,c("ast", "fg", "trb")])
 
-import seaborn as sns
-import matplotlib.pyplot as plt
+import seaborn as sns  
+import matplotlib.pyplot as plt # matplotlib
 sns.pairplot(nba[["ast", "fg", "trb"]])
 plt.show()
 ````
@@ -76,15 +84,15 @@ plt.show()
 library(cluster)
 set.seed(1)
 isGoodCol <- function(col){
-   sum(is.na(col)) == 0 && is.numeric(col) 
-}
+   sum(is.na(col)) == 0 && is.numeric(col) # remove non-numeric columns and columns with missing values
+}  # python numpy.isnan
 goodCols <- sapply(nba, isGoodCol)
 clusters <- kmeans(nba[,goodCols], centers=5)
 labels <- clusters$cluster
 
 from sklearn.cluster import KMeans
 kmeans_model = KMeans(n_clusters=5, random_state=1)
-good_columns = nba._get_numeric_data().dropna(axis=1)
+good_columns = nba._get_numeric_data().dropna(axis=1) # remove non-numeric columns and columns with missing values
 kmeans_model.fit(good_columns)
 labels = kmeans_model.labels_
 ````
@@ -195,4 +203,12 @@ for tag in soup.find_all(id=re.compile("[A-Z]{3,}_basic")):
         row_data = [item.get_text() for item in row.find_all(tag)]
         rows.append(row_data)
     box_scores.append(rows)
+````
+# plot configuration
+````
+par(mfrow=c(2,2))   # Set graphics parameter
+dev.new()  ## opens a new window
+plot(lm.out,ask=F)  ## Plots the fitted curve
+
+
 ````
